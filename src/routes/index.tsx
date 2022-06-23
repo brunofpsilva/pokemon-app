@@ -5,12 +5,10 @@ import PokemonDetails from "../pages/PokemonDetails";
 export default function Router() {
     return useRoutes([
         {
-            path: '',
-            element: <Home/>
+            path: '', element: <Home/>
         },
         {
-            path: '/:id',
-            element: <PokemonDetails/>
+            path: '/:id', element: <PokemonDetails/>
         }
     ])
 }
