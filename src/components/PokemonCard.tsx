@@ -1,9 +1,10 @@
 import {Pokemon} from "../types/pokemon";
-import {alpha, Avatar, Box, Card, styled, Typography} from "@mui/material";
+import {alpha, Avatar, Card, styled, Typography} from "@mui/material";
+import {getIndexByUrl} from "../utils/stringutils";
+import {useNavigate} from "react-router-dom";
 
 type Props = {
-    pokemon: Pokemon,
-    index: number
+    pokemon: Pokemon
 }
 
 const CardStyle = styled(Card)(() => ({
@@ -12,7 +13,11 @@ const CardStyle = styled(Card)(() => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    cursor: "pointer"
+    cursor: "pointer",
+    transition: "all .3s",
+    '&:hover': {
+        backgroundColor: alpha("#000", 0.05)
+    }
 }));
 
 const TitleStyle = styled(Typography)(({theme}) => ({
@@ -22,12 +27,17 @@ const TitleStyle = styled(Typography)(({theme}) => ({
     textAlign: "center"
 }))
 
-export default function PokemonCard({pokemon, index}: Props) {
-    let index_1: string | undefined = pokemon.url.split("https://pokeapi.co/api/v2/pokemon-species/").pop();
-    let index_2: string | undefined = index_1 ? index_1.split("/").pop() : "";
+export default function PokemonCard({pokemon}: Props) {
+    const navigate = useNavigate();
+
+    const index = getIndexByUrl(pokemon.url);
+
+    const handleRedirect = () => {
+        navigate(index)
+    }
 
     return (
-        <CardStyle>
+        <CardStyle onClick={handleRedirect}>
             <Avatar
                 sx={{
                     height: "150px",

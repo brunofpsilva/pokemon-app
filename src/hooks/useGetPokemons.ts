@@ -1,13 +1,13 @@
-import axios from "../utils/axios";
-import {useQuery} from "react-query";
+import {useInfiniteQuery, useQuery} from "react-query";
 
-export function useGetPokemons(page: number) {
-    const getVehicles = async () => {
-        const response = await axios.get(`pokemon-species/`)
-        return response.data;
-    }
+export function useGetPokemons() {
+    const fetchPokemon = async ({pageParam = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=9"}) => {
+        const request = await fetch(pageParam);
+        const {results, next} = await request.json();
+        return {response: results, nextPage: next};
+    };
 
-    return useQuery("pokemonlist", getVehicles, {
-        retry: 1,
+    return useInfiniteQuery("pokemon", fetchPokemon, {
+        getNextPageParam: (lastPage) => lastPage.nextPage
     });
 }

@@ -1,9 +1,9 @@
-import {Box, Container, Grid, LinearProgress, styled, Typography} from "@mui/material";
-import {useGetPokemons} from "../hooks/useGetPokemons";
-import {useState} from "react";
+import {Box, Button, CircularProgress, Container, Grid, IconButton, styled, Toolbar, Typography} from "@mui/material";
 import PokemonCard from "../components/PokemonCard";
 import {Pokemon} from "../types/pokemon";
+import {useGetPokemons} from "../hooks/useGetPokemons";
 import {LoadingButton} from "@mui/lab";
+import {useState} from "react";
 
 const RootStyle = styled(Box)(() => ({
     width: '100%',
@@ -16,27 +16,72 @@ const ContainerStyle = styled(Container)(() => ({
     alignItems: "center",
 }));
 
+const TitleStyle = styled(Typography)(({theme}) => ({
+    ...theme.typography.h5,
+    fontWeight: 600
+}));
+
+const ToolbarStyle = styled(Toolbar)(({theme}) => ({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-between",
+}));
+
 export default function Home() {
-    const [page, setPage] = useState(0);
-    const {isLoading, isSuccess, data} = useGetPokemons(page);
+    const [toggleFavorites, setToggleFavorites] = useState(false);
+    const handleToggleFavorites = () => setToggleFavorites(value => !value);
+
+    const {
+        data,
+        isLoading,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage
+    } = useGetPokemons();
 
     return (
         <RootStyle>
             <ContainerStyle>
-                <Typography sx={{mb: 5}} variant={"h5"}>Pokemon App</Typography>
-                <Grid container spacing={3}>
-                    {
-                        isLoading && <LinearProgress/>
-                    }
-                    {
-                        isSuccess && data.results.map((pokemon: Pokemon, index: number) => (
-                            <Grid item md={4} xs={12}>
-                                <PokemonCard key={pokemon.name} pokemon={pokemon} index={index + 1}/>
-                            </Grid>
-                        ))
-                    }
-                </Grid>
-                <LoadingButton sx={{mt: 10}} variant={"contained"}>Load More</LoadingButton>
+                <ToolbarStyle>
+                    <TitleStyle>
+                        Pokemon App
+                    </TitleStyle>
+                    <Button
+                        onClick={handleToggleFavorites}
+                        sx={{my: 3}}
+                        color={"warning"}
+                        variant={toggleFavorites ? "contained" : "outlined"}>
+                        Favorites
+                    </Button>
+                </ToolbarStyle>
+
+                {isLoading ? (
+                    <CircularProgress/>
+                ) : (
+                    <>
+                        <Grid container spacing={3}>
+                            {data?.pages.map((group, i) =>
+                                group.response.map((pokemon: Pokemon) =>
+                                    <Grid key={pokemon.name} item xs={12} md={4}>
+                                        <PokemonCard pokemon={pokemon}/>
+                                    </Grid>)
+                            )}
+                        </Grid>
+                        <LoadingButton
+                            sx={{mt: 5}}
+                            loading={isFetchingNextPage}
+                            variant={"contained"}
+                            onClick={() => fetchNextPage()}
+                            disabled={!hasNextPage || isFetchingNextPage}>
+                            {isFetchingNextPage
+                                ? "Loading more..."
+                                : hasNextPage
+                                    ? "Load More"
+                                    : "Nothing more to load"}
+                        </LoadingButton>
+                    </>
+                )}
             </ContainerStyle>
         </RootStyle>
     )
