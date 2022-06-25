@@ -1,10 +1,10 @@
-import {Pokemon} from "../types/pokemon";
+import {PokemonList} from "../types/Pokemon";
 import {alpha, Avatar, Card, styled, Typography} from "@mui/material";
 import {getIndexByUrl} from "../utils/stringutils";
 import {useNavigate} from "react-router-dom";
 
 type Props = {
-    pokemon: Pokemon
+    pokemon: PokemonList
 }
 
 const CardStyle = styled(Card)(() => ({

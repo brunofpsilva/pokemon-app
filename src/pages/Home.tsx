@@ -1,16 +1,16 @@
-import {Box, Button, CircularProgress, Container, Grid, IconButton, styled, Toolbar, Typography} from "@mui/material";
+import {Box, Button, CircularProgress, Container, Grid, styled, Toolbar, Typography} from "@mui/material";
 import PokemonCard from "../components/PokemonCard";
-import {Pokemon} from "../types/pokemon";
 import {useGetPokemons} from "../hooks/useGetPokemons";
 import {LoadingButton} from "@mui/lab";
 import {useState} from "react";
+import {PokemonList} from "../types/Pokemon";
 
-const RootStyle = styled(Box)(() => ({
+export const RootStyle = styled(Box)(() => ({
     width: '100%',
     padding: 50
 }));
 
-const ContainerStyle = styled(Container)(() => ({
+export const ContainerStyle = styled(Container)(() => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -62,7 +62,7 @@ export default function Home() {
                     <>
                         <Grid container spacing={3}>
                             {data?.pages.map((group, i) =>
-                                group.response.map((pokemon: Pokemon) =>
+                                group.response.map((pokemon: PokemonList) =>
                                     <Grid key={pokemon.name} item xs={12} md={4}>
                                         <PokemonCard pokemon={pokemon}/>
                                     </Grid>)
