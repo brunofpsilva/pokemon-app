@@ -2,12 +2,15 @@ import {Box, Button, CircularProgress, Container, Grid, styled, Toolbar, Typogra
 import PokemonCard from "../components/PokemonCard";
 import {useGetPokemons} from "../hooks/useGetPokemons";
 import {LoadingButton} from "@mui/lab";
-import {useState} from "react";
 import {PokemonList} from "../types/Pokemon";
+import {useNavigate} from "react-router-dom";
 
-export const RootStyle = styled(Box)(() => ({
+export const RootStyle = styled(Box)(({theme}) => ({
     width: '100%',
-    padding: 50
+    padding: 10,
+    [theme.breakpoints.up('md')]: {
+        padding: 30,
+    },
 }));
 
 export const ContainerStyle = styled(Container)(() => ({
@@ -16,21 +19,24 @@ export const ContainerStyle = styled(Container)(() => ({
     alignItems: "center",
 }));
 
-const TitleStyle = styled(Typography)(({theme}) => ({
+export const TitleStyle = styled(Typography)(({theme}) => ({
     ...theme.typography.h5,
     fontWeight: 600
 }));
 
-const ToolbarStyle = styled(Toolbar)(({theme}) => ({
+export const ToolbarStyle = styled(Toolbar)(({theme}) => ({
+    width: "100%",
     display: "flex",
-    flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-between",
 }));
 
 export default function Home() {
-    const [toggleFavorites, setToggleFavorites] = useState(false);
-    const handleToggleFavorites = () => setToggleFavorites(value => !value);
+    const navigate = useNavigate();
+
+    const handleToggleFavorites = () => {
+        navigate("/favorites");
+    };
 
     const {
         data,
@@ -51,7 +57,7 @@ export default function Home() {
                         onClick={handleToggleFavorites}
                         sx={{my: 3}}
                         color={"warning"}
-                        variant={toggleFavorites ? "contained" : "outlined"}>
+                        variant={"contained"}>
                         Favorites
                     </Button>
                 </ToolbarStyle>

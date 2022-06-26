@@ -33,7 +33,7 @@ export default function PokemonCard({pokemon}: Props) {
     const index = getIndexByUrl(pokemon.url);
 
     const handleRedirect = () => {
-        navigate(index)
+        navigate(`/${index}`);
     }
 
     return (

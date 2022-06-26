@@ -10,5 +10,6 @@ export type Pokemon = {
     height: number;
     weight: number;
     base_experience: number;
+    url: string;
     abilities: Abilities[];
 }
